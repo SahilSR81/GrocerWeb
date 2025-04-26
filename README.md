@@ -1,4 +1,7 @@
-#To run this project on your local machine 
+#To run this project on your local machine or github codespace
+First download the zip and extract on local machine
+If on github codespace then just clone this repo and then do this 
+
 Go to the terminal then in the project directory first grocs file directory once inside then :
 First type : pip install django
 
