@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@100..800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  
+ 
+  <style>
+ /* Modal Content Styling */
+.modal-content {
+  background: linear-gradient(to right, #ff7e5f, #de2817); /* Gradient background */
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  color: #fff;
+}
+
+/* Modal Header Styling */
+.modal-header {
+  border: none;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Close Button Style */
+.btn-close {
+  background-color: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #fff;
+  transition: transform 0.2s ease-in-out;
+}
+
+.btn-close:hover {
+  transform: rotate(90deg);
+}
+
+/* Search Input Styling */
+.search-input {
+  font-size: 1.1rem;
+  border-radius: 50px;
+  border-right: 50px;
+  padding-left: 50px;
+  border: none;
+  background-color: #fff;
+  color: #333;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #feb47b;
+  box-shadow: 0 0 8px rgba(255, 126, 95, 0.5);
+}
+
+/* Search Icon Button Styling */
+.btn-gradient {
+  background: linear-gradient(to right, #ff7e5f, #eb1405); /* Gradient */
+  color: white;
+  border-radius: 50%;
+  padding: 10px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-gradient i {
+  font-size: 1.5rem;
+}
+
+.btn-gradient:hover {
+  background: linear-gradient(to right, #e61111, #ff7e5f); /* Reverse gradient on hover */
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.input-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Hover Animation for Search Input */
+.search-input:focus, .btn-gradient:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(255, 126, 95, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 767px) {
+  .modal-content {
+    padding: 20px;
+    font-size: 1rem;
+  }
+
+  .modal-title {
+    font-size: 1.2rem;
+  }
+
+  .search-input {
+    font-size: 1rem;
+    padding-left: 15px;
+  }
+
+  .btn-gradient {
+    font-size: 1rem;
+    padding: 8px 20px;
+  }
+
+  /* Adjusting the input-group */
+  .input-group {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Adjusting modal size on smaller screens */
+  .modal-dialog {
+    max-width: 100%;
+    margin: 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .modal-content {
+    padding: 15px;
+  }
+
+  .modal-title {
+    font-size: 1.1rem;
+  }
+
+  .search-input {
+    font-size: 0.9rem;
+  }
+
+  .btn-gradient {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+  }
+}
+  </style>
+</head>
+
+<body>
+
+
+  <section class="a">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 col-lg-4 col-12" style="text-align: center;">
+          
+
+
+        </div>
+
+        <div class="col-md-4 col-lg-4 col-12 col-sm-4" style="text-align: center;">
+
+
+        </div>
+
+        <div class="col-md-2 col-lg-2 col-12" style="text-align: center;">
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+  <span>{% include 'web_html/message.html' %}</span>
+  <header>
+
+  
+    <header>
+      <nav class="navbar sticky-top navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+          <!-- Search container that triggers the modal -->
+          <div class="search-container">
+            <!-- Icon for triggering the search modal -->
+            <i class="fa fa-search" data-bs-toggle="modal" data-bs-target="#searchModal"></i>
+            <!-- Search input field for smaller screens -->
+            <form action="{% url 'search_products' %}" method="GET" class="w-100">
+              <input type="text" name="query" placeholder="Search..." class="search-input">
+            </form>
+          </div>
+    
+          <ul></ul>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+    
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link nav-links" href="{% url 'home' %}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link nav-links" href="{% url 'shop' %}">Shop</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link nav-links" href="{% url 'about' %}">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link nav-links" href="{% url 'contact' %}">Contact</a>
+              </li>
+            </ul>
+            <div class="icon">
+              {% if 'cust_id' in request.session %}
+              <div class="dropdown">
+                <button style="border: 0; background-color: #ef1616d3; color:#0cb381 ;" type="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  Hello<i class="fa-solid fa-user ii"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'profile' %}">My Account</a></li>
+                  <li><a class="dropdown-item" href="{% url 'order_history' %}">Order History</a></li>
+                  <li><a class="dropdown-item" href="{% url 'logout' %}">Log-Out</a></li>
+                </ul>
+              </div>
+              {% else %}
+              <a class="ii" href="{% url 'login' %}"><i class="fa-solid fa-user"></i></a>
+              {% endif %}
+              <a class="ii" href="{% url 'wishlist' %}"><i class="fa-solid fa-heart"></i></a>
+              <a class="ii" href="{% url 'cart_list' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+              <span class="badge badge-info">{{ total_items }}</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+    
+      <!-- Search Modal -->
+<!-- Search Modal -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow-lg">
+      <div class="modal-header">
+        <h5 class="modal-title" id="searchModalLabel"><i class="fa fa-search"></i> Find Your Products</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Search Form -->
+        <form action="{% url 'search_products' %}" method="GET">
+          <div class="input-group mb-3">
+            <input type="text" name="query" class="form-control search-input" placeholder="What are you looking for?" required>
+            <!-- Search Icon Button -->
+            <button type="submit" class="btn btn-gradient">
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+        </div>
+      </div>
+      </div>
+    </nav>
+    </div> 
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link nav-links" href="{% url 'home' %}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link nav-links" href="{% url 'shop' %}">Shop</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link nav-links" href="{% url 'about' %}">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link nav-links" href="{% url 'contact' %}">Contact</a>
+              </li>
+            </ul>
+            <div class="icon">
+              {% if 'cust_id' in request.session %}
+              <div class="dropdown">
+                <button style="border: 0; background-color: #ef1616d3; color:#0cb381 ;" type="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  Hello<i class="fa-solid fa-user ii"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'profile' %}">My Account</a></li>
+                  <li><a class="nav-link" href="{% url 'order_history' %}">Order History</a></li>
+                  <li><a class="dropdown-item" href="{% url 'logout' %}">Log-Out</a></li>
+                </ul>
+              </div>
+              {% else %}
+              <a class="ii" href="{% url 'login' %}"><i class="fa-solid fa-user"></i></a>
+              {% endif %}
+              <a class="ii" href="{% url 'wishlist' %}"><i class="fa-solid fa-heart"></i></a>
+              <a class="ii" href="{% url 'cart_list' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+              <span class="badge badge-info">{{ total_items }}</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+    
+      <!-- Search Modal -->
+      <!-- Search Modal -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow-lg">
+      <div class="modal-header">
+        <h5 class="modal-title" id="searchModalLabel"><i class="fa fa-search"></i> Find Your Products</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Search Form -->
+        <form action="{% url 'search_products' %}" method="GET">
+          <div class="input-group mb-3">
+            <input type="text" name="query" class="form-control search-input" placeholder="What are you looking for?" required>
+            <button type="submit" class="btn btn-gradient">
+              <i class="fa fa-search"></i> Search
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
+      </div>
+      </div>
+    </nav>
+    </div>
+    <!-- </div> -->
+    </nav>
+
+  
+
+
+
+  </header>
+  
+
+
+
+
+
+
+  <main>
+
+    <section>
+
+      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="{% static 'image/vegis.png' %}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="{% static 'image/shop.png' %}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="{% static 'image/vegis.png' %}" class="d-block w-100" alt="...">
+
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-target="#carouselExampleIndicators" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-target="#carouselExampleIndicators" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </button>
+      </div>
+
+
+    </section>
+
+
+    
+
+    <section class="coupon">
+
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+
+            <center>
+              <h4 style="color: rgb(176, 0, 0);" class="text">super discount for your <b style="color: #0cb381;">first purchase.</b>
+              </h4>
+            </center>
+
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+    </section>
+
+    <section>
+      {% for i in cat %}
+      <div class="container my-5">
+        <header class="mb-4">
+
+          <h3 style="color: rgb(63, 153, 15);">{{ i.cat_name }}</h3>
+        </header>
+
+        <div class="row">
+          {% if i.product_set %}
+          {% for p in i.product_set.all %}
+          {% if forloop.counter < 9 %}
+           <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card px-4 border shadow-0 mb-4 mb-lg-0">
+              <div class="mask px-2" style="height: 50px;">
+                <div class="d-flex justify-content-between">
+                  <h6><span class="badge bg-danger pt-1 mt-3 ms-2">New</span></h6>
+                  <a href="{% url 'add_to_wishlist' p.id %}?type=product">
+                    <i class="fas fa-heart text-primary fa-lg float-end pt-3 m-2"></i>
+                </a>
+                </div>
+              </div>
+              <a href="product.html" class="">
+                <img src="{{ p.pimage.url }}" class="card-img-top rounded-2" />
+              </a>
+              <div class="card-body d-flex flex-column pt-3 border-top">
+                <a href="#" class="nav-link">{{ p.pname }}</a>
+                <div class="price-wrap mb-2">Rs.
+                  <strong class="">{{ p.pprice }}</strong>
+                  <del class="">{{ p.psellprice }}</del>
+                </div>
+                <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
+                  <a href="{% url 'add_to_cart' 'product' p.id %}" class="btn btn-outline-primary w-100">Add to cart</a>
+                 
+                </div>
+              </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+       
+        </div>
+
+      </div>
+      </div>
+      {% endfor %}
+    </section>
+
+
+
+
+    
+
+    <section class="bag">
+      <div class="container-fluid ">
+        <div class="container py-5">
+          <div class="row g-5 align-items-center">
+            <div class="col-md-12 col-lg-7">
+              <h4 class="mb-3 text-secondary">100% Organic Foods</h4>
+              <h1 class="mb-5 display-3 text-success">Organic Veggies & Fruits Foods</h1>
+             
+            </div>
+            <div class="col-md-12 col-lg-5">
+              <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+                    aria-current="true" aria-label="Slide 1"></button>
+                  
+                </div>
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <img src="{% static 'image/_Fruits&vegisssssss.png' %}" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                      <h5></h5>
+                      <p></p>
+                    </div>
+                  </div>
+                
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                  data-bs-slide="prev">
+                 
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                  data-bs-slide="next">
+                 
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+
+
+ 
+
+    <div  class="cleaning">
+      <section >
+        <div class="container">
+
+          <h3 class="cleaning">Fruits and Vegetables</h3>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="card">
+                <a href="{% url 'shop' %}">  
+                <img src="{% static 'image/fruit&vegis1.webp' %}" class="card-img-top" alt="..."></a>
+                <div class="card-body">
+                  <p class="card-text"></p>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-md-3">
+              <div class="card">
+                <a href="{% url 'shop'  %}">  
+                <img src="{% static 'image/fruit&vegis2.webp' %}" class="card-img-top" alt="..."></a>
+                <div class="card-body">
+                  <p class="card-text"></p>
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="col-md-3">
+              <div class="card">
+                <a href="{% url 'shop' %}">  
+                <img src="{% static 'image/fruit&vegis4.webp' %}" class="card-img-top" alt="..."></a>
+                <div class="card-body">
+                  <p class="card-text"></p>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-md-3">
+              <div class="card">
+                <a href="{% url 'shop' %}">
+                <img src="{% static 'image/fruits&vegis.webp' %}" class="card-img-top" alt="..."></a>
+                <div class="card-body">
+                  <p class="card-text"></p>
+                </div>
+              </div>
+
+            </div>
+
+
+          </div>
+        </div>
+
+
+      </section>
+    </div>
+
+
+
+    <div class="cleaning">
+      <section>
+        <div class="container">
+
+          <h3 class="cleaning">Cleaning & Household</h3>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="card">
+                <a href="{% url 'shop' %}">
+                <img src="{% static 'image/cleaning1.webp' %}" class="card-img-top" alt="..."></a>
+                <div class="card-body">
+                  <p class="card-text"></p>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-md-3">
+              <div class="card">
+                <a href="{% url 'shop' %}">
+                <img src="{% static 'image/cleaning2.webp' %}" class="card-img-top" alt="..."></a>
+                <div class="card-body">
+                  <p class="card-text"></p>
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="col-md-3">
+              <div class="card">
+                <a href="{% url 'shop' %}">
+                <img src="{% static 'image/cleaning3.webp' %}" class="card-img-top" alt="..."></a>
+                <div class="card-body">
+                  <p class="card-text"></p>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-md-3">
+              <div class="card">
+                <a href="{% url 'shop' %}">
+                <img src="{% static 'image/cleaninng4.webp' %}" class="card-img-top" alt="..."></a>
+                <div class="card-body">
+                  <p class="card-text"></p>
+                </div>
+              </div>
+
+            </div>
+
+
+          </div>
+        </div>
+
+
+      </section>
+    </div>
+
+
+    <div class="snacks">
+      <section>
+        <div class="container">
+
+          <h3 class="snacks">Snacks Store</h3>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="card">
+                <a href="{% url 'shop' %}">
+                <img src="{% static 'image/snack1.webp' %}" class="card-img-top" alt="..."></a>
+                <div class="card-body">
+                  <p class="card-text"></p>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-md-3">
+              <div class="card">
+                <a href="{% url 'shop' %}">
+                <img src="{% static 'image/snack2.webp' %}" class="card-img-top" alt="..."></a>
+                <div class="card-body">
+                  <p class="card-text"></p>
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="col-md-3">
+              <div class="card">
+                <a href="{% url 'shop' %}">
+                <img src="{% static 'image/snack3.webp' %}" class="card-img-top" alt="..."></a>
+                <div class="card-body">
+                  <p class="card-text"></p>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-md-3">
+              <div class="card">
+                <a href="{% url 'shop' %}">
+                <img src="{% static 'image/snack4.webp' %}" class="card-img-top" alt="..."></a>
+                <div class="card-body">
+                  <p class="card-text"></p>
+                </div>
+              </div>
+
+            </div>
+
+
+          </div>
+        </div>
+
+
+      </section>
+    </div>
+
+    
+
+    <!-- {% for category in cat %}
+  <div class="col-md-3">
+    <div class="card">
+      <a href="{% url 'category_products' category.id %}">
+        <img src="{% static 'image/'|add:category.cat_name|add:'.webp' %}" class="card-img-top" alt="{{ category.cat_name }}">
+      </a>
+      <div class="card-body">
+        <p class="card-text">{{ category.cat_name }}</p>
+      </div>
+    </div>
+  </div>
+{% endfor %} -->
+      <!-- <section>
+        <div class="docarso">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+  
+  
+          <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img src="{% static 'image/Welcome to Grocer4.png' %} " class="d-block" alt="...">
+              </div>
+              <div class="carousel-item">
+                <img src="image/Welcome to Grocer1.png" class="d-block " alt="...">
+              </div>
+              <div class="carousel-item">
+                <img src="image/Welcome to Grocer2.png" class="d-block " alt="...">
+              </div>
+            </div>
+          </div>
+  
+              </div>
+            </div>
+          </div>
+  
+  
+  
+          
+        </div>
+  
+  
+  
+  
+      </section> -->
+
+
+    
+
+
+
+
+   
+   
+    
+
+   
+  </main>
+
+  <footer>
+    <div class="container-fluid text-white-50 footer pt-5 mt-5">
+      <div class="container py-5">
+        <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(226, 175, 24, 0.5) ;">
+          <div class="row g-4">
+            <div class="col-lg-3">
+              <a href="#">
+                <h1 class="text-success mb-0">Grocer</h1>
+                <p class="text-secondary mb-0">Fresh products</p>
+              </a>
+            </div>
+            <div class="col-lg-6">
+              <!-- <div class="position-relative mx-auto">
+                              <input class="form-control border-0 w-100 py-3 px-4 rounded-pill" type="number" placeholder="Your Email">
+                              <button type="submit" class="btn btn-primary border-0 border-secondary py-3 px-4 position-absolute rounded-pill text-white" style="top: 0; right: 0;">Subscribe Now</button>
+                          </div> -->
+            </div>
+            <div class="col-lg-3">
+              <div class="d-flex justify-content-end pt-3">
+                <a class="btn  btn-outline-secondary me-2 btn-md-square rounded-circle" href="https://x.com/?lang=en"><i
+                    class="fab fa-twitter"></i></a>
+                <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href="https://www.facebook.com/"><i
+                    class="fab fa-facebook-f"></i></a>
+                <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href="https://www.youtube.com/"><i
+                    class="fab fa-youtube"></i></a>
+                <a class="btn btn-outline-secondary btn-md-square rounded-circle" href="https://in.linkedin.com/"><i
+                    class="fab fa-linkedin-in"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-5">
+          <div class="col-lg-3 col-md-6">
+            <div class="footer-item">
+              <h4 class="text-light mb-3">Why People Like us!</h4>
+              <p class="mb-4">Welcome to Grocer, your trusted online grocery store dedicated to bringing convenience, quality, and freshness right to your doorstep.</p>
+              <a href="{% url 'about' %}" class="btn border-secondary py-2 px-4 rounded-pill text-success">Read More</a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="d-flex flex-column text-start footer-item">
+              <h4 class="text-light mb-3">Shop Info</h4>
+              <a class="btn-link" href="{% url 'about' %}">About Us</a>
+              <a class="btn-link" href="{% url 'contact' %}">Contact Us</a>
+              <a class="btn-link" href="">Privacy Policy</a>
+              <a class="btn-link" href="">Terms & Condition</a>
+              <a class="btn-link" href="">Return Policy</a>
+              <a class="btn-link" href="">FAQs & Help</a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="d-flex flex-column text-start footer-item">
+              <h4 class="text-light mb-3">Account</h4>
+              <a class="btn-link" href="{% url 'profile' %}">My Account</a>
+              <a class="btn-link" href="">Shop details</a>
+              <a class="btn-link" href="{% url 'cart_list' %}">Shopping Cart</a>
+              <a class="btn-link" href="">Wishlist</a>
+              <!-- <a class="btn-link" href="">Order History</a>
+              <a class="btn-link" href="">International Orders</a> -->
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="footer-item">
+              <h4 class="text-light mb-3">Contact</h4>
+              <p>Address: Mera Ghar</p>
+              <p>Email: Example@gmail.com</p>
+              <p>Phone: +91-098677447</p>
+              <p>Payment Accepted</p>
+              <img src="img/payment.png" class="img-fluid" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Footer End -->
+
+
+
+
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+    integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+    integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+    crossorigin="anonymous"></script>
+  <script>
+    $(document).ready(function () {
+      setTimeout(function () {
+        $('.mes').remove()
+      }, 1000
+      )
+    })
+
+  //   document.addEventListener('DOMContentLoaded', function () {
+  //   // Select all input fields with class "search-input"
+  //   const searchInputs = document.querySelectorAll('.search-input');
+
+  //   searchInputs.forEach(function(input) {
+  //     input.addEventListener('focus', function () {
+  //       const modal = new bootstrap.Modal(document.getElementById('searchModal'));
+  //       modal.show();
+  //     });
+  //   });
+  // });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.querySelector(".search-input");
+
+    if (searchInput) {
+      searchInput.addEventListener("focus", function () {
+        let searchModal = new bootstrap.Modal(document.getElementById('searchModal'));
+        searchModal.show();
+      });
+    }
+  });
+
+  // document.addEventListener("DOMContentLoaded", function () {
+  //   const searchInput = document.querySelector(".search-input");
+
+  //   if (searchInput) {
+  //     searchInput.addEventListener("focus", function () {
+  //       let searchModal = new bootstrap.Modal(document.getElementById('searchModal'));
+  //       searchModal.show();
+  //     });
+  //   }
+  // });
+  </script>
+
+
+</body>
+
+</html>

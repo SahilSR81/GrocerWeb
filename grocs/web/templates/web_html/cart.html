@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@100..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <style>
+    /* 📍 Main and Modal Map Styling */
+     #locationMap {
+    height: 400px;
+    width: 100%;
+    border-radius: 10px;
+  }
+  .modal-content {
+    border-radius: 1rem;
+  }
+    textarea {
+      resize: none;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: #f42b2b;
+    }
+
+    .quantity {
+      display: flex;
+      align-items: center;
+      border: 2px solid #f42b2b;
+      border-radius: 40px;
+      overflow: hidden;
+      width: fit-content;
+    }
+
+    .quantity button {
+      background-color: #f42b2b;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .quantity button:hover {
+      background-color: #f42b2b;
+    }
+
+    .quantity .input-box {
+      width: 50px;
+      text-align: center;
+      border: none;
+      padding: 5px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    /* Hide number input spin buttons */
+    .input-box::-webkit-inner-spin-button,
+    .input-box::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    #map {
+      height: 100px;
+      /* increase this as needed */
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+
+
+
+
+    .nav-link {
+      text-decoration: none;
+      color: #f42b2b;
+    }
+
+    .quantity {
+      display: flex;
+      align-items: center;
+      border: 2px solid #f42b2b;
+      border-radius: 40px;
+      overflow: hidden;
+      width: fit-content;
+    }
+
+    .quantity button {
+      background-color: #f42b2b;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .quantity button:hover {
+      background-color: #f42b2b;
+    }
+
+    .quantity .input-box {
+      width: 50px;
+      text-align: center;
+      border: none;
+      padding: 5px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    /* Hide number input spin buttons */
+    .input-box::-webkit-inner-spin-button,
+    .input-box::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    #map {
+      height: 100px;
+      /* increase this as needed */
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <section class="a">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 col-lg-4 col-12" style="text-align: center;">
+          <!-- <p class="text">Follow us :
+                    <a href=""><i class="fa-brands fa-instagram"></i></a>
+                    <a href=""><i class="fa-brands fa-youtube"></i></a>
+                    <a href=""><i class="fa-brands fa-x-twitter"></i></a></p> -->
+
+          <!-- <nav class="navbar navbar-light bg-light">
+                      <div class="container-fluid">
+                        <a class="navbar-brand" href="#">
+                          <img src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="30" height="24" class="d-inline-block align-text-top"> 
+                          Bootstrap by deep
+                        </a>
+                      </div>
+                    </nav> -->
+
+          <!-- <div class="search-container">
+                      <input type="text" placeholder="Search....">
+                      <i class="fa fa-search"></i>
+                    </div> -->
+
+
+        </div>
+
+        <div class="col-md-4 col-lg-4 col-12 col-sm-4" style="text-align: center;">
+
+
+        </div>
+
+        <div class="col-md-2 col-lg-2 col-12" style="text-align: center;">
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+  <header>
+
+    <!-- <nav class="navbar  navbar-light  ">
+      <div class="container d-flex jutify-content-between"> -->
+    <!-- <div>
+          <h1 class="text-success">grocer</h1>
+          
+        </div>  -->
+    <!-- <div> -->
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light">
+      <div class="container-fluid">
+        <!-- <nav class="navbar navbar-light bg-light">
+                <a class="navbar-brand" href="#">
+                  
+                </a>
+              </nav> -->
+        <!-- <a class="navbar-brand" href="#"><h5>Shop by categroies</h5></a> -->
+
+        <div class="search-container">
+          <input type="text" placeholder="Search....">
+          <i class="fa fa-search"></i>
+        </div>
+
+        <ul>
+
+        </ul>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link nav-links" aria-current="page" href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-links" href="{% url 'shop' %}">Shop</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-links" href="{% url 'about' %}">About </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-links" href="{% url 'contact' %}">Contact</a>
+            </li>
+            <!-- <li class="nav-item">
+                    <a class="nav-link nav-links" href="#"></a>
+                  </li> -->
+            <!-- <li class="nav-item">
+                    <a class="nav-link nav-links" href="#">Contact</a>
+                  </li> -->
+          </ul>
+          <div class="icon">
+            {% if 'cust_id' in request.session %}
+            <!-- <a  class="ii" href="{% url 'login' %}"><i class="fa-solid fa-user"></i></a> -->
+            <div class="dropdown">
+              <button style="border: 0; background-color: #ef1616d3; color:#0cb381 ;" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                Hello<i class="fa-solid fa-user ii"></i>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'profile' %}">My Account</a></li>
+                <!-- <li><a class="dropdown-item" >Change Password</a></li> -->
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Log-Out</a></li>
+              </ul>
+            </div>
+            {% else %}
+            <a class="ii" href="{% url 'login' %}"><i class="fa-solid fa-user"></i></a>
+
+            {% endif %}
+
+            <a class="ii" href="{% url 'wishlist' %}"><i class="fa-solid fa-heart"></i></a>
+            <a class="ii" href="{% url 'cart_list' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+            <spam class="badge badge-info">{{request.session.cart.key|length}}</spam>
+          </div>
+
+
+        </div>
+      </div>
+      </div>
+    </nav>
+    </div>
+    <!-- </div> -->
+    </nav>
+
+    {% include 'web_html/message.html' %}
+
+
+
+  </header>
+  <header>
+
+
+    <!-- Heading -->
+
+  </header>
+
+  <!-- cart + summary -->
+  <section class="bg-light my-5">
+    <div class="container">
+      <div class="row">
+        <!-- cart -->
+        <div style="padding: 10px 10px 10px 10px;" class="col-lg-9 ">
+          <div class="card border shadow-0">
+            <div class="m-4">
+
+              <h4 class="card-title mb-4">Your shopping cart</h4>
+              <div class="row gy-3 mb-4">
+                {% if cart_data %}
+                    {% for c in cart_data %}
+                        {% if not c.is_wishlist %}
+                            <div style="padding: 10px 10px 10px 10px;" class="col-lg-5">
+                                <div class="me-lg-5">
+                                    <div class="d-flex">
+                                        {% if c.product %}
+                                            <img src="{{ c.product.pimage.url }}" class="border rounded me-3" style="width: 120px; height: 120px;" />
+                                            <div class="price_name">
+                                                <a href="#" class="nav-link"><h5>{{ c.product.pname }}</h5></a>
+                                            </div>
+                                            <div class="">
+                                                <text class="text-muted text-nowrap">
+                                                    <strike>Rs. {{ c.product.psellprice }}</strike><br/>
+                                                    <small class="h5">Rs. {{ c.product.pprice }}</small>
+                                                </text>
+                                            </div>
+                                        {% elif c.fruit %}
+                                            <img src="{{ c.fruit.fimage.url }}" class="border rounded me-3" style="width: 120px; height: 120px;" />
+                                            <div class="price_name">
+                                                <a href="#" class="nav-link"><h5>{{ c.fruit.fname }}</h5></a>
+                                            </div>
+                                            <div class="">
+                                                <text class="text-muted text-nowrap">
+                                                    <strike>Rs. {{ c.fruit.fprice }}</strike><br/>
+                                                    <small class="h5">Rs. {{ c.fruit.fprice }}</small>
+                                                </text>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <div>
+                                <div class="quantity">
+                                    <form method="POST" action="{% url 'update_cart_quantity' c.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" name="action" value="minus" class="minus">&minus;</button>
+                                        <input type="number" value="{{ c.quantity }}" class="input-box" readonly>
+                                        <button type="submit" name="action" value="plus" class="plus">&plus;</button>
+                                    </form>
+                                </div>
+                            </div>
+            
+                            <div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
+                                <div class="float-md-end">
+                                  {% if c.product %}
+                                  <a href="{% url 'add_to_wishlist' c.product.id %}?type=product" class="btn btn-light border px-2 icon-hover-primary">
+                                    <i class="fas fa-heart fa-lg px-1 text-secondary"></i>
+                                  </a>
+                                {% elif c.fruit %}
+                                  <a href="{% url 'add_to_wishlist' c.fruit.id %}?type=fruit" class="btn btn-light border px-2 icon-hover-primary">
+                                    <i class="fas fa-heart fa-lg px-1 text-secondary"></i>
+                                  </a>
+                                {% endif %}
+                                    <a href="{% url 'remove_product' c.id %}" class="btn btn-light border text-danger icon-hover-danger">Remove</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            </div>
+            <div class="border-top pt-4 mx-4 mb-4">
+              <p><i class="fas fa-truck text-muted fa-lg"></i> Free Delivery within 5-7 Days</p>
+              <p class="text-muted">
+                <!-- Lorem ipsum dolor sit amet, consectetur adipisicing elit... -->
+              </p>
+            </div>
+          </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <div class="container py-5">
+            <div class="card shadow-lg border-0">
+              <div class="card-body">
+                <h5><i class="fas fa-map-marker-alt me-2 text-primary"></i><strong>Confirm Your Delivery Location</strong></h5>
+                <button type="button" class="btn btn-outline-primary w-100 mb-3" data-bs-toggle="modal" data-bs-target="#locationModal">
+                  <i class="fas fa-location-arrow me-2"></i>Select Location on Map
+                </button>
+          
+                <form method="post" action="{% url 'save_address' %}">
+                  {% csrf_token %}
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <input type="text" name="house_no" class="form-control" placeholder="House / Flat No." required>
+                    </div>
+                    <div class="col-md-6">
+                      <input type="text" id="area" name="area" class="form-control" placeholder="Area / Street" required>
+                    </div>
+                    <div class="col-md-6">
+                      <input type="text" id="city" name="city" class="form-control" placeholder="City" required>
+                    </div>
+                    <div class="col-md-6">
+                      <input type="text" id="pincode" name="pincode" class="form-control" placeholder="Pincode" required>
+                    </div>
+                    <div class="col-md-6">
+                      <input type="text" id="state" name="state" class="form-control" placeholder="State" required>
+                    </div>
+                    <div class="col-md-6">
+                      <select name="address_type" class="form-select" required>
+                        <option value="">Select Address Type</option>
+                        <option value="Home">🏠 Home</option>
+                        <option value="Work">💼 Work</option>
+                        <option value="Other">📍 Other</option>
+                      </select>
+                    </div>
+                    <div class="col-12">
+                      <textarea name="address" class="form-control" rows="3" placeholder="Additional Notes (optional)"></textarea>
+                    </div>
+                    <div class="col-12">
+                      <button type="submit" class="btn btn-success w-100">
+                        <i class="fas fa-save me-2"></i>Save Address
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          
+
+          <!-- Location Modal -->
+            <!-- Location Modal -->
+            <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content shadow">
+                  <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-map-marked-alt me-2"></i>Select Your Location</h5>
+                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal"></button> -->
+                    <button type="button" class="btn btn-outline-danger me-2" data-bs-dismiss="modal" >
+                      <i class="fas fa-times-circle me-1"></i>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div id="locationMap"></div>
+                    <div class="mt-3 text-end">
+                      <button class="btn btn-primary" onclick="getCurrentLocation()">
+                        <i class="fas fa-crosshairs me-1"></i> Use My Current Location
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+          <section>
+
+            <section class="mt-5">
+              <div class="card shadow-0 border">
+                <div class="card-body">
+                  <h5 class="mb-3">Cart Summary</h5>
+            
+                  <div class="d-flex justify-content-between">
+                    <p class="mb-2">Total price:</p>
+                    <p class="mb-2">₹{{ total_original_price|default:"0.00" }}</p>
+                  </div>
+            
+                  <div class="d-flex justify-content-between">
+                    <p class="mb-2">Discount:</p>
+                    <p class="mb-2 text-success">- ₹{{ total_discount|default:"0.00" }}</p>
+                  </div>
+            
+                  <div class="d-flex justify-content-between">
+                    <p class="mb-2">TAX (10%):</p>
+                    <p class="mb-2">₹{{ tax_amount|default:"0.00" }}</p>
+                  </div>
+            
+                  <hr />
+            
+                  <div class="d-flex justify-content-between">
+                    <p class="mb-2">Final Total:</p>
+                    <p class="mb-2 fw-bold">₹{{ final_total|default:"0.00" }}</p>
+                  </div>
+            
+                  <div class="mt-3">
+                    <form method="post" action="{% url 'place_order' %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-success w-100 shadow-0 mb-2">Place Order</button>
+                    </form>
+                    <a href="{% url 'home' %}" class="btn btn-light w-100 border mt-2">Back to shop</a>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+
+
+
+
+          </section>
+
+
+        </div>
+        <!-- cart -->
+        <!-- summary -->
+
+        <div class="col-lg-3">
+          <div class="card mb-3 border shadow-0">
+            <div class="card-body">
+              <form>
+                <div class="form-group">
+                  <label class="form-label">Have coupon?</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control border" name="" placeholder="Coupon code" />
+                    <button class="btn btn-light border">Apply</button>
+                  </div>
+                </div>
+              </form>
+
+            </div>
+
+          </div>
+
+          <div class="card border shadow-0">
+            <div class="m-4">
+              <h4 class="card-title mb-4">Payment Option</h4>
+
+              <!-- Payment Options -->
+              <form method="post" action="{% url 'payment' %}">
+                {% csrf_token %}
+                <div class="row gy-3 mb-4">
+                  <!-- Payment Choices -->
+                  <div class="col-12">
+                    <div class="form-check mb-2">
+                      <input class="form-check-input" type="radio" name="payment_method" id="cod" value="cod" checked
+                        onclick="selectPayment('cod')">
+                      <label class="form-check-label" for="cod">
+                        Cash On Delivery
+                      </label>
+                    </div>
+
+                    <div class="form-check mb-2">
+                      <input class="form-check-input" type="radio" name="payment_method" id="qr" value="qr"
+                        onclick="selectPayment('qr')">
+                      <label class="form-check-label" for="qr">
+                        Pay via QR Code
+                      </label>
+                    </div>
+
+                    <div class="form-check mb-2">
+                      <input class="form-check-input" type="radio" name="payment_method" id="card" value="card"
+                        onclick="selectPayment('card')">
+                      <label class="form-check-label" for="card">
+                        Debit / Credit Card
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- QR Image -->
+                  <div id="qr-section" class="mt-3" style="display: none;">
+                    <label><strong>Scan QR to Pay</strong></label><br>
+                    <!-- <img src="{% static 'images/qr-placeholder.png' %}" alt="QR Code" class="img-fluid rounded" style="max-width: 200px;"> -->
+                  </div>
+
+                  <!-- Card Form -->
+                  <div id="card-form" class="mt-3" style="display: none;">
+                    <label><strong>Enter Card Details</strong></label>
+                    <input type="text" class="form-control mb-2" placeholder="Cardholder Name" name="card_name">
+                    <input type="text" class="form-control mb-2" placeholder="Card Number" maxlength="16"
+                      name="card_number">
+                    <div class="row">
+                      <div class="col">
+                        <input type="text" class="form-control mb-2" placeholder="Expiry (MM/YY)" name="card_expiry">
+                      </div>
+                      <div class="col">
+                        <input type="text" class="form-control mb-2" placeholder="CVV" maxlength="4" name="card_cvv">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <dddd></dddd>
+              
+              </form>
+            </div>
+
+
+          </div>
+
+
+
+
+
+
+          
+        </div>
+      </div>
+  </section>
+
+  
+
+  <footer>
+    <div class="container-fluid text-white-50 footer pt-5 mt-5">
+      <div class="container py-5">
+        <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(226, 175, 24, 0.5) ;">
+          <div class="row g-4">
+            <div class="col-lg-3">
+              <a href="#">
+                <h1 class="text-success mb-0">Grocer</h1>
+                <p class="text-secondary mb-0">Fresh products</p>
+              </a>
+            </div>
+            <div class="col-lg-6">
+              
+            </div>
+            <div class="col-lg-3">
+              <div class="d-flex justify-content-end pt-3">
+                <a class="btn  btn-outline-secondary me-2 btn-md-square rounded-circle" href="https://x.com/?lang=en"><i
+                    class="fab fa-twitter"></i></a>
+                <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle"
+                  href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
+                <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle"
+                  href="https://www.youtube.com/"><i class="fab fa-youtube"></i></a>
+                <a class="btn btn-outline-secondary btn-md-square rounded-circle" href="https://in.linkedin.com/"><i
+                    class="fab fa-linkedin-in"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-5">
+          <div class="col-lg-3 col-md-6">
+            <div class="footer-item">
+              <h4 class="text-light mb-3">Why People Like us!</h4>
+              <p class="mb-4">Welcome to Grocer, your trusted online grocery store dedicated to bringing convenience,
+                quality, and freshness right to your doorstep.</p>
+              <a href="{% url 'about' %}" class="btn border-secondary py-2 px-4 rounded-pill text-success">Read More</a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="d-flex flex-column text-start footer-item">
+              <h4 class="text-light mb-3">Shop Info</h4>
+              <a class="btn-link" href="{% url 'about' %}">About Us</a>
+              <a class="btn-link" href="{% url 'contact' %}">Contact Us</a>
+              <a class="btn-link" href="">Privacy Policy</a>
+              <a class="btn-link" href="">Terms & Condition</a>
+              <a class="btn-link" href="">Return Policy</a>
+              <a class="btn-link" href="">FAQs & Help</a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="d-flex flex-column text-start footer-item">
+              <h4 class="text-light mb-3">Account</h4>
+              <a class="btn-link" href="{% url 'profile' %}">My Account</a>
+              <a class="btn-link" href="">Shop details</a>
+              <a class="btn-link" href="{% url 'cart_list' %}">Shopping Cart</a>
+              <a class="btn-link" href="">Wishlist</a>
+              <!-- <a class="btn-link" href="">Order History</a>
+                <a class="btn-link" href="">International Orders</a> -->
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="footer-item">
+              <h4 class="text-light mb-3">Contact</h4>
+              <p>Address: Mera Ghar</p>
+              <p>Email: Example@gmail.com</p>
+              <p>Phone: +91-098677447</p>
+              <p>Payment Accepted</p>
+              <img src="img/payment.png" class="img-fluid" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Footer End -->
+
+
+
+
+  </footer>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+    integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+    integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script>
+    let modalMap;
+    let marker;
+    let modalInitialized = false;
+
+    const locationModal = document.getElementById('locationModal');
+    locationModal.addEventListener('shown.bs.modal', function () {
+      if (!modalInitialized) {
+        modalMap = L.map('locationMap').setView([20.5937, 78.9629], 5);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(modalMap);
+        modalInitialized = true;
+
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function (position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            modalMap.setView([lat, lon], 16);
+            marker = L.marker([lat, lon]).addTo(modalMap).bindPopup("You are here").openPopup();
+            updateAddress(lat, lon);
+          });
+        }
+
+        modalMap.on('click', function (e) {
+          const lat = e.latlng.lat;
+          const lon = e.latlng.lng;
+          if (marker) {
+            modalMap.removeLayer(marker);
+          }
+          marker = L.marker([lat, lon]).addTo(modalMap).bindPopup("Selected Location").openPopup();
+          updateAddress(lat, lon);
+        });
+      }
+    });
+
+    async function updateAddress(lat, lon) {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
+        const data = await res.json();
+        const address = data.address || {};
+        document.getElementById('area').value = address.road || address.suburb || '';
+        document.getElementById('city').value = address.city || address.town || address.village || '';
+        document.getElementById('pincode').value = address.postcode || '';
+        document.getElementById('state').value = address.state || '';
+      } catch (err) {
+        console.error("Address fetch failed:", err);
+      }
+    }
+    $(document).ready(function () {
+      setTimeout(function () {
+        $('.mes').remove()
+      }, 3000
+      )
+    })
+
+    $(document).ready(function () {
+      setTimeout(function () {
+        $('.mes').remove()
+      }, 3000)
+    });
+
+    function selectPayment(method) {
+      document.getElementById("card-form").style.display = (method === 'card') ? 'block' : 'none';
+      document.getElementById("qr-section").style.display = (method === 'qr') ? 'block' : 'none';
+    }
+
+    function fillAddressForm(elem) {
+      document.querySelector('[name="house_no"]').value = elem.dataset.house;
+      document.querySelector('[name="area"]').value = elem.dataset.area;
+      document.querySelector('[name="city"]').value = elem.dataset.city;
+      document.querySelector('[name="pincode"]').value = elem.dataset.pincode;
+      document.querySelector('[name="state"]').value = elem.dataset.state;
+      document.querySelector('[name="address_type"]').value = elem.dataset.type;
+      document.querySelector('[name="address"]').value = elem.dataset.note;
+    }
+
+   
+    function useCurrentLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      if (modalMap) {
+        modalMap.setView([lat, lon], 16);
+        if (marker) modalMap.removeLayer(marker);
+        marker = L.marker([lat, lon]).addTo(modalMap).bindPopup("You are here").openPopup();
+        updateAddress(lat, lon);
+      }
+    }, function (err) {
+      console.error("Geolocation error:", err);
+      alert("Could not fetch your current location.");
+    });
+  } else {
+    alert("Geolocation not supported by your browser.");
+  }
+}
+
+  </script>
+
+
+</body>
+
+</html>

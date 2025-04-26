@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Superadmin - All Orders</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 4 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+        .mes {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Superadmin Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Grocer Admin</a>
+</nav>
+
+<div class="container mt-4">
+
+    <h3 class="mb-4">All Orders</h3>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} mes">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% for order in orders %}
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>Order ID:</strong> {{ order.id }} |
+                    <strong>Customer:</strong> {{ order.customer.first }} {{ order.customer.last }} |
+                    <strong>Status:</strong>
+                    <span class="badge text-white
+                        {% if order.status == 'Pending' %}bg-warning
+                        {% elif order.status == 'Confirmed' %}bg-success
+                        {% elif order.status == 'Shipped' %}bg-primary
+                        {% elif order.status == 'Delivered' %}bg-secondary
+                        {% elif order.status == 'Cancelled' %}bg-danger
+                        {% else %}bg-dark{% endif %}">
+                        {{ order.status }}
+                    </span> |
+                    <strong>Date:</strong> {{ order.created_at|date:"d M Y, h:i A" }}
+                </div>
+                <div>
+                    {% if order.status == 'Pending' %}
+                        <a href="{% url 'confirm_order' order.id %}" class="btn btn-sm btn-warning">
+                            <i class="fas fa-check"></i> Confirm
+                        </a>
+                    {% elif order.status == 'Confirmed' %}
+                        <a href="{% url 'shipped_order' order.id %}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-truck"></i> Ship
+                        </a>
+                    {% elif order.status == 'Shipped' %}
+                        <a href="{% url 'delivered_order' order.id %}" class="btn btn-sm btn-success">
+                            <i class="fas fa-check-circle"></i> Deliver
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'track_order' order.id %}" class="btn btn-sm btn-info">
+                        <i class="fas fa-map-marker-alt"></i> Track
+                    </a>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <p><strong>Address:</strong><br>{{ order.address|linebreaksbr }}<br>City: {{ order.city }}</p>
+                <p><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+
+                <hr>
+                <h6 class="mb-3">Items Ordered:</h6>
+                <div class="row">
+                    {% for item in order.items.all %}
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border">
+                                {% if item.get_product_image %}
+                                    <img src="{{ item.get_product_image }}" class="card-img-top" alt="Product Image">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ item.get_product_name }}</h6>
+                                    <p class="card-text">Quantity: {{ item.quantity }}</p>
+                                    <p class="card-text">Price: ₹{{ item.price }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="alert alert-info">No orders found.</div>
+    {% endfor %}
+</div>
+
+<!-- JS & Bootstrap dependencies -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        setTimeout(() => $('.mes').fadeOut(), 1500);
+    });
+</script>
+
+</body>
+</html>

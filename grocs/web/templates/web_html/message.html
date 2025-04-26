@@ -1,0 +1,14 @@
+{% if messages %}
+{% for msg in messages %}
+{% if msg.level_tag == 'success' %}
+
+<div class="alert alert-success mes">
+    {% else %}
+    <div class="alert alert-danger mes">
+        {% endif %}
+    <strong>{{msg}}</strong>
+
+</div>
+
+{% endfor %}
+{% endif %}

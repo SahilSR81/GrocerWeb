@@ -1,0 +1,129 @@
+<!-- web/templates/web/verify_otp.html -->
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Verify OTP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap & FontAwesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Montserrat", sans-serif;
+    }
+
+    body {
+      width: 100%;
+      min-height: 100vh;
+      padding: 0 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #a02929;
+    }
+
+    .otp_form {
+      width: 100%;
+      max-width: 435px;
+      background: #fff;
+      border-radius: 50px;
+      padding: 41px 30px;
+      box-shadow: 0 10px 20px rgba(249, 5, 5, 0.883);
+    }
+
+    .otp_form h3 {
+      font-size: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .input_box label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .input_box input {
+      width: 100%;
+      height: 57px;
+      border: 1px solid #DADAF2;
+      border-radius: 5px;
+      outline: none;
+      background: #F8F8FB;
+      font-size: 17px;
+      padding: 0px 20px;
+      margin-bottom: 25px;
+      transition: 0.2s ease;
+    }
+
+    .input_box input:focus {
+      border-color: #626cd6;
+    }
+
+    form button {
+      width: 100%;
+      height: 56px;
+      border-radius: 5px;
+      border: none;
+      outline: none;
+      background: #e80f0f;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 500;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: 0.3s ease;
+    }
+
+    form button:hover {
+      background: #4954d0;
+    }
+
+    .error-message {
+      color: red;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="otp_form">
+    <h3>Enter the OTP sent to {{ email }}</h3>
+    <form method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="email" value="{{ email }}">
+      <div class="input_box">
+        <label for="otp">OTP</label>
+        <input type="text" name="otp" placeholder="Enter OTP" required>
+      </div>
+      <button type="submit">Verify</button>
+    </form>
+    {% if error %}<p class="error-message">{{ error }}</p>{% endif %}
+    {% include 'web_html/message.html' %}
+  </div>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      setTimeout(function () {
+        $('.mes').remove()
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
